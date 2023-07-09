@@ -139,8 +139,6 @@ public class ConsensusServiceExample {
         }
     }
 
-
-
     private static void subscribeToTopicMessages(TopicId topicId, Client client) {
         logger.info("Retrieving topic messages");
         new TopicMessageQuery()

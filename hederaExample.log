@@ -2,147 +2,63 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2023-07-07T16:22:29.412392Z</date>
-  <millis>1688746949412</millis>
-  <nanos>392000</nanos>
+  <date>2023-07-09T13:26:07.423864800Z</date>
+  <millis>1688909167423</millis>
+  <nanos>864800</nanos>
   <sequence>0</sequence>
   <logger>class org.exo1.ConsensusServiceExample</logger>
   <level>CONFIG</level>
-  <class>org.exo1.ConsensusServiceExample</class>
+  <class>org.exo2.TokenServiceExample</class>
   <method>initializeLogging</method>
   <thread>1</thread>
   <message>Logging initialized</message>
 </record>
 <record>
-  <date>2023-07-07T16:22:30.250239700Z</date>
-  <millis>1688746950250</millis>
-  <nanos>239700</nanos>
+  <date>2023-07-09T13:26:08.285644600Z</date>
+  <millis>1688909168285</millis>
+  <nanos>644600</nanos>
   <sequence>1</sequence>
   <logger>class org.exo1.ConsensusServiceExample</logger>
   <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
+  <class>org.exo2.TokenServiceExample</class>
   <method>initializeClient</method>
   <thread>1</thread>
   <message>Client initialized</message>
 </record>
 <record>
-  <date>2023-07-07T16:22:30.296821500Z</date>
-  <millis>1688746950296</millis>
-  <nanos>821500</nanos>
+  <date>2023-07-09T13:26:08.342115300Z</date>
+  <millis>1688909168342</millis>
+  <nanos>115300</nanos>
   <sequence>2</sequence>
   <logger>class org.exo1.ConsensusServiceExample</logger>
   <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>createTopicWithAdminAndSubmitKey</method>
+  <class>org.exo2.TokenServiceExample</class>
+  <method>createAccount</method>
   <thread>1</thread>
-  <message>Creating topic with adminKey and submitKey</message>
+  <message>Private key = 302e020100300506032b657004220420f6389c1c6142c2898f3c657de1b660bc0ad156ea8f3f0263453751d4a42c4f47</message>
 </record>
 <record>
-  <date>2023-07-07T16:22:30.388821800Z</date>
-  <millis>1688746950388</millis>
-  <nanos>821800</nanos>
+  <date>2023-07-09T13:26:08.347566800Z</date>
+  <millis>1688909168347</millis>
+  <nanos>566800</nanos>
   <sequence>3</sequence>
   <logger>class org.exo1.ConsensusServiceExample</logger>
   <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>createTopicWithAdminAndSubmitKey</method>
+  <class>org.exo2.TokenServiceExample</class>
+  <method>createAccount</method>
   <thread>1</thread>
-  <message>Signing ConsensusTopicCreateTransaction with key</message>
+  <message>Public key = 302a300506032b6570032100bc14aaf1b8c9fe4b2e641282e78c6e63e374e86b0d168d5461504432c46ee7fc</message>
 </record>
 <record>
-  <date>2023-07-07T16:22:30.390823200Z</date>
-  <millis>1688746950390</millis>
-  <nanos>823200</nanos>
+  <date>2023-07-09T13:26:08.349155300Z</date>
+  <millis>1688909168349</millis>
+  <nanos>155300</nanos>
   <sequence>4</sequence>
   <logger>class org.exo1.ConsensusServiceExample</logger>
   <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>createTopicWithAdminAndSubmitKey</method>
+  <class>org.exo2.TokenServiceExample</class>
+  <method>createAccount</method>
   <thread>1</thread>
-  <message>Submitting ConsensusTopicCreateTransaction to a Hedera network</message>
-</record>
-<record>
-  <date>2023-07-07T16:22:57.878477200Z</date>
-  <millis>1688746977878</millis>
-  <nanos>477200</nanos>
-  <sequence>5</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>main</method>
-  <thread>1</thread>
-  <message>Created new topic 0.0.15065498</message>
-</record>
-<record>
-  <date>2023-07-07T16:23:00.162768600Z</date>
-  <millis>1688746980162</millis>
-  <nanos>768600</nanos>
-  <sequence>8</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>updateTopicMemo</method>
-  <thread>1</thread>
-  <message>Updated topic 0.0.15065498</message>
-</record>
-<record>
-  <date>2023-07-07T16:23:00.493618200Z</date>
-  <millis>1688746980493</millis>
-  <nanos>618200</nanos>
-  <sequence>9</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>subscribeToTopicMessages</method>
-  <thread>1</thread>
-  <message>Retrieving topic messages</message>
-</record>
-<record>
-  <date>2023-07-07T16:23:00.503884600Z</date>
-  <millis>1688746980503</millis>
-  <nanos>884600</nanos>
-  <sequence>10</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>publishMessageToTopic</method>
-  <thread>1</thread>
-  <message>Submitting message 'My first message' to topic 0.0.15065498 with submitKey</message>
-</record>
-<record>
-  <date>2023-07-07T16:23:04.938784900Z</date>
-  <millis>1688746984938</millis>
-  <nanos>784900</nanos>
-  <sequence>11</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>publishMessageToTopic</method>
-  <thread>1</thread>
-  <message>Submitting message 'My second message' to topic 0.0.15065498 with submitKey</message>
-</record>
-<record>
-  <date>2023-07-07T16:23:05.062038900Z</date>
-  <millis>1688746985062</millis>
-  <nanos>38900</nanos>
-  <sequence>12</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>lambda$subscribeToTopicMessages$0</method>
-  <thread>24</thread>
-  <message>2023-07-07T16:23:00.314228003Z received topic message: My first message</message>
-</record>
-<record>
-  <date>2023-07-07T16:23:09.025829Z</date>
-  <millis>1688746989025</millis>
-  <nanos>829000</nanos>
-  <sequence>13</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
-  <level>INFO</level>
-  <class>org.exo1.ConsensusServiceExample</class>
-  <method>lambda$subscribeToTopicMessages$0</method>
-  <thread>24</thread>
-  <message>2023-07-07T16:23:04.812989225Z received topic message: My second message</message>
+  <message>Trying to create a new account...</message>
 </record>
 </log>

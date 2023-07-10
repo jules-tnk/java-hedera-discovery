@@ -5,6 +5,7 @@ import com.hedera.hashgraph.sdk.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.exo1.ConsensusServiceExample;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.FileHandler;
@@ -14,9 +15,15 @@ import java.util.logging.Logger;
 public class TokenServiceExample {
     private static final Logger logger = Logger.getLogger(String.valueOf(ConsensusServiceExample.class));
 
-    private static PrivateKey treasuryKey;
     private static PrivateKey adminKey;
+
+    private static PrivateKey supplyKey;
+
     private static PrivateKey feeScheduleKey;
+
+    private static PrivateKey treasuryKey;
+
+    private static AccountId myAccountId = AccountId.fromString(Dotenv.load().get("MY_ACCOUNT_ID"));
 
     public static void main(String[] args) {
         initializeLogging();
@@ -25,8 +32,8 @@ public class TokenServiceExample {
         Client client = initializeClient();
 
         // Create account A and B
-        AccountId accountAId = createAccount(client);
-        AccountId accountBId = createAccount(client);
+        AccountId accountAId = AccountId.fromString(Dotenv.load().get("ACCOUNT_A_ID"));
+        AccountId accountBId = AccountId.fromString(Dotenv.load().get("ACCOUNT_B_ID"));
 
         // Create token
         TokenId tokenId = createToken(client);
@@ -39,6 +46,42 @@ public class TokenServiceExample {
 
         // Get token info
         showTokenInfo(tokenId, client);
+
+        // update token custom fee
+        List<CustomFee> newCustomFee = List.of(
+                new CustomRoyaltyFee()
+                        .setFeeCollectorAccountId(myAccountId)
+                        .setNumerator(1)
+                        .setDenominator(10));
+        updateTokenCustomFees(tokenId, newCustomFee, client);
+
+        // Get token info
+        showTokenInfo(tokenId, client);
+
+        // Mint token
+        TransactionReceipt mintTransaction1 = mintNFT(tokenId, client);
+        TransactionReceipt mintTransaction2 = mintNFT(tokenId, client);
+
+        // Get token info
+        showTokenInfo(tokenId, client);
+
+        System.out.println("BEFORE TRANSFER");
+        System.out.println("My account balance:");
+        showAccountBalance(myAccountId, client);
+        System.out.println("Account A balance:");
+        showAccountBalance(accountAId, client);
+        System.out.println("Account B balance:");
+        showAccountBalance(accountBId, client);
+
+        transferNFT(tokenId, mintTransaction1, client.getOperatorAccountId(), accountBId, client);
+
+        System.out.println("AFTER TRANSFER");
+        System.out.println("My account balance:");
+        showAccountBalance(myAccountId, client);
+        System.out.println("Account A balance:");
+        showAccountBalance(accountAId, client);
+        System.out.println("Account B balance:");
+        showAccountBalance(accountBId, client);
 
     }
 
@@ -86,49 +129,49 @@ public class TokenServiceExample {
             // Log the account ID
             logger.info("The new account ID is: " + newAccountId);
 
-            // Get the new account's balance
-            AccountBalance accountBalanceQuery = new AccountBalanceQuery()
-                    .setAccountId(newAccountId)
-                    .execute(client);
-
-            // Log the balance
-            logger.info("The new account balance is: " + accountBalanceQuery.hbars);
             return newAccountId;
 
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        } catch (PrecheckStatusException e) {
-            throw new RuntimeException(e);
-        } catch (ReceiptStatusException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private static TokenId createToken(Client client) {
-        PrivateKey adminKey = PrivateKey.generateED25519();
-        PublicKey adminPublicKey = adminKey.getPublicKey();
-        PrivateKey supplyKey = PrivateKey.generateED25519();
-        PublicKey supplyPublicKey = supplyKey.getPublicKey();
-        PrivateKey feeScheduleKey = PrivateKey.generateED25519();
-        PublicKey feeSchedulePublicKey = feeScheduleKey.getPublicKey();
-        AccountId myAccountId = AccountId.fromString(Dotenv.load().get("MY_ACCOUNT_ID"));
+        adminKey = PrivateKey.generateED25519();
 
+        supplyKey = PrivateKey.generateED25519();
+
+        feeScheduleKey = PrivateKey.generateED25519();
+
+        treasuryKey = PrivateKey.generateED25519();
+
+        System.out.println("Creating token...");
         try {
 
-            TransactionResponse tokenCreateTransaction = new TokenCreateTransaction()
+            TokenCreateTransaction tokenCreateTransaction = new TokenCreateTransaction()
                     .setTokenName("JujuNFT")
                     .setTokenSymbol("JNFT")
+                    .setTokenMemo("Memo of JujuNFT")
                     .setDecimals(0)
                     .setInitialSupply(0)
                     .setTokenType(TokenType.NON_FUNGIBLE_UNIQUE)
-                    .setAdminKey(adminPublicKey)
-                    .setSupplyKey(supplyPublicKey)
-                    .setFeeScheduleKey(feeSchedulePublicKey)
+                    .setAdminKey(adminKey)
+                    .setSupplyKey(supplyKey)
+                    .setFeeScheduleKey(feeScheduleKey)
                     .setTreasuryAccountId(myAccountId)
-                    .freezeWith(client)
-                    .execute(client);
+                    .setCustomFees(
+                            List.of(
+                                    new CustomRoyaltyFee()
+                                            .setNumerator(1)
+                                            .setDenominator(20)
+                                            .setFeeCollectorAccountId(client.getOperatorAccountId())))
+                    .freezeWith(client);
 
-            TokenId tokenId = tokenCreateTransaction.getReceipt(client).tokenId;
+            TokenCreateTransaction signedTokenCreateTransaction = tokenCreateTransaction.sign(adminKey)
+                    .sign(treasuryKey);
+
+            TokenId tokenId = signedTokenCreateTransaction.execute(client).getReceipt(client).tokenId;
+            System.out.println("Token created with token ID: " + tokenId);
             return tokenId;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,17 +181,13 @@ public class TokenServiceExample {
     }
 
     private static void showTokenInfo(TokenId tokenId, Client client) {
+        System.out.println("Trying to get token info...");
         try {
             TokenInfo tokenInfo = new TokenInfoQuery()
                     .setTokenId(tokenId)
                     .execute(client);
+            System.out.println(tokenInfo);
 
-            System.out.println("Token name: " + tokenInfo.name);
-            System.out.println("Token symbol: " + tokenInfo.symbol);
-            System.out.println("Token admin key: " + tokenInfo.adminKey);
-            System.out.println("Token supply key: " + tokenInfo.supplyKey);
-            System.out.println("Token fee schedule key: " + tokenInfo.feeScheduleKey);
-            System.out.println("Token custom fees: " + tokenInfo.customFees);
         } catch (TimeoutException | PrecheckStatusException e) {
             e.printStackTrace();
         }
@@ -156,16 +195,71 @@ public class TokenServiceExample {
 
     private static void updateTokenMemo(TokenId tokenId, String newMemo, Client client) {
         try {
-
+            System.out.println("Trying to update token memo...");
             TokenUpdateTransaction tokenUpdateTransaction = new TokenUpdateTransaction()
                     .setTokenId(tokenId)
-                    .setTokenMemo(newMemo);
+                    .setTokenMemo(newMemo)
+                    .freezeWith(client);
 
-            tokenUpdateTransaction.execute(client);
-
-        } catch (TimeoutException e) {
+            tokenUpdateTransaction.sign(adminKey).execute(client);
+            System.out.println("Token memo updated.");
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (PrecheckStatusException e) {
+        }
+    }
+
+    private static void updateTokenCustomFees(TokenId tokenId, List<CustomFee> customFees, Client client) {
+        System.out.println("Trying to update token custom fees...");
+        try {
+
+            TokenFeeScheduleUpdateTransaction transaction = new TokenFeeScheduleUpdateTransaction()
+                    .setTokenId(tokenId)
+                    .setCustomFees(customFees)
+                    .freezeWith(client);
+
+            transaction.sign(feeScheduleKey).sign(adminKey).execute(client);
+            System.out.println("Token custom fees updated.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Token custom fees updated.");
+    }
+
+    private static TransactionReceipt mintNFT(TokenId tokenId, Client client) {
+        System.out.println("Trying to mint NFT...");
+        try {
+            TokenMintTransaction transaction = new TokenMintTransaction()
+                    .setTokenId(tokenId)
+                    .addMetadata("meta 1".getBytes())
+                    .addMetadata("meta 2".getBytes())
+                    .addMetadata("meta 3".getBytes())
+                    .freezeWith(client);
+
+            TransactionResponse transactionResponse = transaction.sign(supplyKey).execute(client);
+            TransactionReceipt transactionReceipt = transactionResponse.getReceipt(client);
+            System.out.println("NFT minted.");
+
+            return transactionReceipt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static void transferNFT(TokenId tokenId, TransactionReceipt mintTransaction1,
+            AccountId sender, AccountId receiver, Client client) {
+        System.out.println("Trying to transfer NFT...");
+        try {
+            TransferTransaction transaction = new TransferTransaction()
+                    .addTokenTransfer(tokenId, sender, -1)
+                    .addTokenTransfer(tokenId, receiver, 1)
+                    .freezeWith(client);
+
+            TransactionResponse transactionResponse = transaction.sign(supplyKey).execute(client);
+            TransactionReceipt transactionReceipt = transactionResponse.getReceipt(client);
+            System.out.println("NFT transferred.");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

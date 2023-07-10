@@ -21,7 +21,7 @@ public class SmartContractServieExample {
 
         // AccountId otherAccountId = createAccount(client);
 
-        showAccountInfo(client.getOperatorAccountId(), client);
+        // showAccountInfo(client.getOperatorAccountId(), client);
 
         ContractId contractId = createContract(client);
 
@@ -66,26 +66,27 @@ public class SmartContractServieExample {
 
     public static String getBytecodeHex(String filePath) {
         System.out.println("Getting bytecode from " + filePath);
-        File file = new File(filePath);
-        InputStream jsonStream = null;
         try {
+            File file = new File(filePath);
+
+            InputStream jsonStream = null;
             jsonStream = new FileInputStream(file);
+
+            JsonObject json = new Gson()
+                    .fromJson(new InputStreamReader(jsonStream, StandardCharsets.UTF_8), JsonObject.class);
+
+            if (json.has("object")) {
+                return json.getAsJsonPrimitive("object").getAsString();
+            }
+
+            System.out.println("Bytecode retrieved");
+
+            return json.getAsJsonPrimitive("bytecode").getAsString();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        if (jsonStream == null) {
-            throw new RuntimeException("failed to get " + filePath);
-        }
-
-        JsonObject json = new Gson()
-                .fromJson(new InputStreamReader(jsonStream, StandardCharsets.UTF_8), JsonObject.class);
-
-        if (json.has("object")) {
-            return json.getAsJsonPrimitive("object").getAsString();
-        }
-
-        return json.getAsJsonPrimitive("bytecode").getAsString();
+        return null;
     }
 
     public static String getBytecode(String filePath) {
@@ -144,6 +145,28 @@ public class SmartContractServieExample {
                     .setContractId(contractId)
                     .execute(client);
             System.out.println(contractInfo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void callContractGetAddress(ContractId contractId, Client client) {
+        System.out.println("Calling contract getAddress()...");
+        try {
+
+            // Create the transaction
+            ContractExecuteTransaction transaction = new ContractExecuteTransaction()
+                    .setContractId(contractId)
+                    .setGas(100_000_000)
+                    .setFunction("get_address");
+
+            // Sign with the client operator private key to pay for the transaction and
+            // submit the query to a Hedera network
+            TransactionResponse txResponse = transaction.execute(client);
+
+            // Request the receipt of the transaction
+            TransactionReceipt receipt = txResponse.getReceipt(client);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,7 +1,6 @@
 package org.exo2;
 
 import com.hedera.hashgraph.sdk.*;
-import com.hedera.hashgraph.sdk.proto.RoyaltyFee;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.exo1.ConsensusServiceExample;
@@ -112,6 +111,7 @@ public class TokenServiceExample {
         PublicKey supplyPublicKey = supplyKey.getPublicKey();
         PrivateKey feeScheduleKey = PrivateKey.generateED25519();
         PublicKey feeSchedulePublicKey = feeScheduleKey.getPublicKey();
+        AccountId myAccountId = AccountId.fromString(Dotenv.load().get("MY_ACCOUNT_ID"));
 
         try {
 
@@ -124,6 +124,7 @@ public class TokenServiceExample {
                     .setAdminKey(adminPublicKey)
                     .setSupplyKey(supplyPublicKey)
                     .setFeeScheduleKey(feeSchedulePublicKey)
+                    .setTreasuryAccountId(myAccountId)
                     .freezeWith(client)
                     .execute(client);
 

@@ -34,7 +34,23 @@ public class HederaExamples {
         client.setDefaultMaxTransactionFee(new Hbar(100));
         client.setDefaultMaxQueryPayment(new Hbar(50));
         logger.info("Client initialized");
+        // get client info
+        showAccountInfo(client.getOperatorAccountId(), client);
+
         return client;
+    }
+
+    private static void showAccountInfo(AccountId accountId, Client client) {
+        System.out.println("Getting account info from account ID: " + accountId);
+        try {
+            AccountInfo accountInfo = new AccountInfoQuery()
+                    .setAccountId(accountId)
+                    .execute(client);
+
+            System.out.println(accountInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static AccountId createNewAccount(Client client) {
@@ -55,15 +71,15 @@ public class HederaExamples {
             // Get the new account ID
             AccountId newAccountId = newAccount.getReceipt(client).accountId;
 
-            //Log the account ID
+            // Log the account ID
             logger.info("The new account ID is: " + newAccountId);
 
-            //Get the new account's balance
+            // Get the new account's balance
             AccountBalance accountBalanceQuery = new AccountBalanceQuery()
                     .setAccountId(newAccountId)
                     .execute(client);
 
-            //Log the balance
+            // Log the balance
             logger.info("The new account balance is: " + accountBalanceQuery.hbars);
             return newAccountId;
 
@@ -91,8 +107,8 @@ public class HederaExamples {
         logger.info("Trying to send 1000 tinybar from " + senderAccountId + " to " + receiverAccountId);
         try {
             TransactionResponse sendHbar = new TransferTransaction()
-                    .addHbarTransfer(senderAccountId, Hbar.fromTinybars(-1000)) //Sending account
-                    .addHbarTransfer(receiverAccountId, Hbar.fromTinybars(1000)) //Receiving account
+                    .addHbarTransfer(senderAccountId, Hbar.fromTinybars(-1000)) // Sending account
+                    .addHbarTransfer(receiverAccountId, Hbar.fromTinybars(1000)) // Receiving account
                     .execute(client);
             logger.info("Sent 1000 tinybar from " + senderAccountId + " to " + receiverAccountId);
         } catch (TimeoutException e) {
@@ -102,7 +118,7 @@ public class HederaExamples {
         }
     }
 
-    private static Hbar getAccountBalanceQueryCost(Client client, AccountId accountId){
+    private static Hbar getAccountBalanceQueryCost(Client client, AccountId accountId) {
         try {
             Hbar queryCost = new AccountBalanceQuery()
                     .setAccountId(accountId)
@@ -116,7 +132,7 @@ public class HederaExamples {
         }
     }
 
-    private static AccountBalance getAccountBalance(Client client, AccountId accountId){
+    private static AccountBalance getAccountBalance(Client client, AccountId accountId) {
         try {
             AccountBalance accountBalance = new AccountBalanceQuery()
                     .setAccountId(accountId)

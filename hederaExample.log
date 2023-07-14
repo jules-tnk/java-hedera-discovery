@@ -2,27 +2,63 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2023-07-10T10:05:11.957966800Z</date>
-  <millis>1688983511957</millis>
-  <nanos>966800</nanos>
+  <date>2023-07-14T07:39:54.417681400Z</date>
+  <millis>1689320394417</millis>
+  <nanos>681400</nanos>
   <sequence>0</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
+  <logger>class org.example.HederaExamples</logger>
   <level>CONFIG</level>
-  <class>org.exo2.TokenServiceExample</class>
+  <class>org.example.HederaExamples</class>
   <method>initializeLogging</method>
   <thread>1</thread>
   <message>Logging initialized</message>
 </record>
 <record>
-  <date>2023-07-10T10:05:12.584809Z</date>
-  <millis>1688983512584</millis>
-  <nanos>809000</nanos>
+  <date>2023-07-14T07:39:55.458636200Z</date>
+  <millis>1689320395458</millis>
+  <nanos>636200</nanos>
   <sequence>1</sequence>
-  <logger>class org.exo1.ConsensusServiceExample</logger>
+  <logger>class org.example.HederaExamples</logger>
   <level>INFO</level>
-  <class>org.exo2.TokenServiceExample</class>
+  <class>org.example.HederaExamples</class>
   <method>initializeClient</method>
   <thread>1</thread>
   <message>Client initialized</message>
+</record>
+<record>
+  <date>2023-07-14T07:39:57.905614500Z</date>
+  <millis>1689320397905</millis>
+  <nanos>614500</nanos>
+  <sequence>2</sequence>
+  <logger>class org.example.HederaExamples</logger>
+  <level>INFO</level>
+  <class>org.example.HederaExamples</class>
+  <method>createNewAccount</method>
+  <thread>1</thread>
+  <message>Private key = 302e020100300506032b657004220420953416cd6012af885033360c7f49034cb47b6d63d25df93aa28c41ae93ac3237</message>
+</record>
+<record>
+  <date>2023-07-14T07:39:57.909259100Z</date>
+  <millis>1689320397909</millis>
+  <nanos>259100</nanos>
+  <sequence>3</sequence>
+  <logger>class org.example.HederaExamples</logger>
+  <level>INFO</level>
+  <class>org.example.HederaExamples</class>
+  <method>createNewAccount</method>
+  <thread>1</thread>
+  <message>Public key = 302a300506032b6570032100eb227c3224a649ef6cac3480c3ec62da210f8d1dc900eb07a9d6cd15a0e9322a</message>
+</record>
+<record>
+  <date>2023-07-14T07:39:57.912519200Z</date>
+  <millis>1689320397912</millis>
+  <nanos>519200</nanos>
+  <sequence>4</sequence>
+  <logger>class org.example.HederaExamples</logger>
+  <level>INFO</level>
+  <class>org.example.HederaExamples</class>
+  <method>createNewAccount</method>
+  <thread>1</thread>
+  <message>Trying to create a new account...</message>
 </record>
 </log>

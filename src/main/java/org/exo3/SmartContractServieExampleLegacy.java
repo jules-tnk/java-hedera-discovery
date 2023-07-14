@@ -15,7 +15,7 @@ import com.hedera.hashgraph.sdk.*;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-public class SmartContractServieExample {
+public class SmartContractServieExampleLegacy {
     public static void main(String[] args) {
         Client client = initializeClient();
 

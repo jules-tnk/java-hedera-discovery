@@ -15,15 +15,31 @@ import java.util.logging.Logger;
 public class TokenServiceExample {
     private static final Logger logger = Logger.getLogger(String.valueOf(ConsensusServiceExample.class));
 
-    private static PrivateKey adminKey;
+    // For token
+    private static PrivateKey adminKey, supplyKey, feeScheduleKey, treasuryKey, myPrivateKey;
 
-    private static PrivateKey supplyKey;
+    // For accounts
+    private static AccountId accountAId, accountBId, myAccountId;
+    private static PrivateKey accounAPrivateKey, accountBPrivateKey;
+    private static PublicKey accountAPublicKey, accountBPublicKey;
 
-    private static PrivateKey feeScheduleKey;
+    private static void getInfosFromEnvFile() {
+        adminKey = PrivateKey.fromString(Dotenv.load().get("ADMIN_KEY"));
+        supplyKey = PrivateKey.fromString(Dotenv.load().get("SUPPLY_KEY"));
+        feeScheduleKey = PrivateKey.fromString(Dotenv.load().get("FEE_SCHEDULE_KEY"));
+        treasuryKey = PrivateKey.fromString(Dotenv.load().get("TREASURY_KEY"));
 
-    private static PrivateKey treasuryKey;
+        myAccountId = AccountId.fromString(Dotenv.load().get("MY_ACCOUNT_ID"));
+        myPrivateKey = PrivateKey.fromString(Dotenv.load().get("MY_PRIVATE_KEY"));
 
-    private static AccountId myAccountId = AccountId.fromString(Dotenv.load().get("MY_ACCOUNT_ID"));
+        accountAId = AccountId.fromString(Dotenv.load().get("ACCOUNT_A_ID"));
+        accounAPrivateKey = PrivateKey.fromString(Dotenv.load().get("ACCOUNT_A_PRIVATE_KEY"));
+        accountAPublicKey = accounAPrivateKey.getPublicKey();
+
+        accountBId = AccountId.fromString(Dotenv.load().get("ACCOUNT_B_ID"));
+        accountBPrivateKey = PrivateKey.fromString(Dotenv.load().get("ACCOUNT_B_PRIVATE_KEY"));
+        accountBPublicKey = accountBPrivateKey.getPublicKey();
+    }
 
     public static void main(String[] args) {
         initializeLogging();
@@ -32,8 +48,10 @@ public class TokenServiceExample {
         Client client = initializeClient();
 
         // Create account A and B
-        AccountId accountAId = AccountId.fromString(Dotenv.load().get("ACCOUNT_A_ID"));
-        AccountId accountBId = AccountId.fromString(Dotenv.load().get("ACCOUNT_B_ID"));
+        System.out.println("Creating account A");
+        AccountId accountAId = createAccount(client);
+        System.out.println("Creating account B");
+        AccountId accountBId = createAccount(client);
 
         // Create token
         TokenId tokenId = createToken(client);
@@ -138,12 +156,16 @@ public class TokenServiceExample {
 
     private static TokenId createToken(Client client) {
         adminKey = PrivateKey.generateED25519();
+        System.out.println("adminKey = " + adminKey);
 
         supplyKey = PrivateKey.generateED25519();
+        System.out.println("supplyKey = " + supplyKey);
 
         feeScheduleKey = PrivateKey.generateED25519();
+        System.out.println("feeScheduleKey = " + feeScheduleKey);
 
         treasuryKey = PrivateKey.generateED25519();
+        System.out.println("treasuryKey = " + treasuryKey);
 
         System.out.println("Creating token...");
         try {
